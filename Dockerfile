@@ -25,7 +25,7 @@ ENV SPLUNK_HOME=/opt/splunk \
 RUN wget -O splunk-7.2.6-c0bf0f679ce9-Linux-x86_64.tgz 'https://www.splunk.com/bin/splunk/DownloadActivityServlet?architecture=x86_64&platform=linux&version=7.2.6&product=splunk&filename=splunk-7.2.6-c0bf0f679ce9-Linux-x86_64.tgz&wget=true' \
   && tar xzvf splunk-7.2.6-c0bf0f679ce9-Linux-x86_64.tgz -C /opt \
   && rm -f /splunk-7.2.6-c0bf0f679ce9-Linux-x86_64.tgz \
-  && groupadd ${SPLUNK_GROUP} && useradd ${SPLUNK_USER$} -b /opt/ -g ${SPLUNK_GROUP} \
+  && groupadd ${SPLUNK_GROUP} && useradd ${SPLUNK_USER} -b /opt/ -g ${SPLUNK_GROUP} \
   && chown -R ${SPLUNK_USER}:${SPLUNK_GROUP} ${SPLUNK_HOME}
  
 FROM splunk_install as splunk_base
