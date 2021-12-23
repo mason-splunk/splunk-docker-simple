@@ -23,13 +23,14 @@ FROM os_base as splunk_install
 ENV SPLUNK_HOME=/opt/splunk \
     SPLUNK_GROUP=splunk \
     SPLUNK_USER=splunk \
-    SPLUNK_TGZ=splunk-8.0.0-1357bef0a7f6-Linux-x86_64.tgz \
-    SPLUNK_URL='https://www.splunk.com/bin/splunk/DownloadActivityServlet?architecture=x86_64&platform=linux&version=8.0.0&product=splunk&filename=splunk-8.0.0-1357bef0a7f6-Linux-x86_64.tgz&wget=true'
+    SPLUNK_TGZ=splunk-8.2.1-ddff1c41e5cf-Linux-x86_64.tgz \
+    SPLUNK_URL='https://download.splunk.com/products/splunk/releases/8.2.1/linux/splunk-8.2.1-ddff1c41e5cf-Linux-x86_64.tgz'
 
 # Download and Install Splunk
 RUN wget -O ${SPLUNK_TGZ} ${SPLUNK_URL} \
   && tar xzvf ${SPLUNK_TGZ} -C /opt \
   && rm -f ${SPLUNK_TGZ} \
+  && rm -rf  ${SPLUNK_GROUP}/splunk-8.2.1-ddff1c41e5cf-linux-2.6-x86_64-manifest \
   && groupadd ${SPLUNK_GROUP} \
   && useradd ${SPLUNK_USER} -d ${SPLUNK_HOME} -g ${SPLUNK_GROUP} --shell /bin/bash \
   && chown -R ${SPLUNK_USER}:${SPLUNK_GROUP} ${SPLUNK_HOME} \
