@@ -1,22 +1,17 @@
 # Set the bage image
-FROM ubuntu:19.04 AS os_base
+FROM centos:centos8 AS os_base
 
 # File Author / Maintainer
-MAINTAINER Mason Morales <mason@splunk.com>
+LABEL auther="Sean Elliott"
+LABEL version=1.0
 
 ARG DEBIAN_FRONTEND=noninteractive
-
 COPY ./splunk_ulimits.conf /etc/security/limits.d/splunk_ulimits.conf
 
-RUN ln -fs /usr/share/zoneinfo/UTC /etc/localtime \
-  && apt-get update \
-  && apt-get install -y ntp \
-  && service ntp restart \
-  && apt-get install -y --no-install-recommends wget tar sudo openssl ca-certificates vim \
-  && rm -rf /var/cache/apt/* \
-  && rm -rf /var/lib/apt/lists/* \
-  && apt-get clean autoclean \
-  && chmod 0644 /etc/security/limits.d/splunk_ulimits.conf
+RUN dnf --nodocs -y upgrade-minimal \
+    && dnf --nodocs -y install --setopt=install_weak_deps=False wget sudo ca-certificates \
+    && dnf clean all \
+    && chmod 0644 /etc/security/limits.d/splunk_ulimits.conf
 
 FROM os_base as splunk_install
 
@@ -30,7 +25,24 @@ ENV SPLUNK_HOME=/opt/splunk \
 RUN wget -O ${SPLUNK_TGZ} ${SPLUNK_URL} \
   && tar xzvf ${SPLUNK_TGZ} -C /opt \
   && rm -f ${SPLUNK_TGZ} \
-  && rm -rf  ${SPLUNK_GROUP}/splunk-8.2.1-ddff1c41e5cf-linux-2.6-x86_64-manifest \
+  && rm -rf ${SPLUNK_HOME}/splunk-8.2.1-ddff1c41e5cf-linux-2.6-x86_64-manifest \
+  && rm -rf ${SPLUNK_HOME}/etc/apps/SplunkForwarder \
+  && rm -rf ${SPLUNK_HOME}/etc/apps/SplunkLightForwarder \
+  && rm -rf ${SPLUNK_HOME}/etc/apps/introspection_generator_addon \
+  && rm -rf ${SPLUNK_HOME}/etc/apps/learned \
+  && rm -rf ${SPLUNK_HOME}/etc/apps/legacy \
+  && rm -rf ${SPLUNK_HOME}/etc/apps/python_upgrade_readiness_app \
+  && rm -rf ${SPLUNK_HOME}/etc/apps/sample_app \
+  && rm -rf ${SPLUNK_HOME}/etc/apps/splunk_archiver \
+  && rm -rf ${SPLUNK_HOME}/etc/apps/splunk_essentials_8_2 \
+  && rm -rf ${SPLUNK_HOME}/etc/apps/splunk_gdi \
+  && rm -rf ${SPLUNK_HOME}/etc/apps/splunk_instrumentation \
+  && rm -rf ${SPLUNK_HOME}/etc/apps/splunk_internal_metrics \
+  && rm -rf ${SPLUNK_HOME}/etc/apps/splunk_metrics_workspace \
+  && rm -rf ${SPLUNK_HOME}/etc/apps/splunk_monitoring_console \
+  && rm -rf ${SPLUNK_HOME}/etc/apps/splunk_rapid_diag \
+  && rm -rf ${SPLUNK_HOME}/etc/apps/splunk_secure_gateway \
+  && rm -rf ${SPLUNK_HOME}/etc/apps/upgrade_readiness_app \
   && groupadd ${SPLUNK_GROUP} \
   && useradd ${SPLUNK_USER} -d ${SPLUNK_HOME} -g ${SPLUNK_GROUP} --shell /bin/bash \
   && chown -R ${SPLUNK_USER}:${SPLUNK_GROUP} ${SPLUNK_HOME} \
@@ -65,4 +77,3 @@ EXPOSE 8191
 EXPOSE 8088
 
 ENTRYPOINT ${SPLUNK_HOME}/bin/splunk start --nodaemon
-
