@@ -28,5 +28,6 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
-          tags: user/app:latest
-          
+          tags: mybeda/splunkdockersimple:latest,mybeda/splunkdockersimple:8.2.1_2
+          secrets: |
+            GIT_AUTH_TOKEN=${{ secrets.MYTOKEN }}
