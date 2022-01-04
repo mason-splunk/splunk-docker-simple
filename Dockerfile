@@ -1,5 +1,5 @@
 # Set the bage image
-FROM centos:centos8 AS os_base
+FROM rockylinux:latest AS os_base
 
 # File Author / Maintainer
 LABEL auther="Sean Elliott"
