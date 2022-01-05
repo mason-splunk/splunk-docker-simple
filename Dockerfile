@@ -19,7 +19,7 @@ ENV SPLUNK_HOME=/opt/splunk \
     SPLUNK_GROUP=splunk \
     SPLUNK_USER=splunk \
     SPLUNK_TGZ=splunk-8.2.1-ddff1c41e5cf-Linux-x86_64.tgz \
-    SPLUNK_URL='https://download.splunk.com/products/splunk/releases/8.2.1/linux/splunk-8.2.1-ddff1c41e5cf-Linux-x86_64.tgz'
+    SPLUNK_URL="https://download.splunk.com/products/splunk/releases/8.2.1/linux/splunk-8.2.1-ddff1c41e5cf-Linux-x86_64.tgz"
 
 # Download and Install Splunk
 RUN wget -q -O ${SPLUNK_TGZ} ${SPLUNK_URL} \
