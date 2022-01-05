@@ -1,5 +1,5 @@
 # Set the bage image
-FROM rockylinux:latest AS os_base
+FROM rockylinux:8 AS os_base
 
 # File Author / Maintainer
 LABEL auther="Sean Elliott"
