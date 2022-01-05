@@ -49,12 +49,13 @@ RUN wget -q -O ${SPLUNK_TGZ} ${SPLUNK_URL} \
   && mkdir /home/root \
   && export HOME=/home/root
 
-FROM splunk_install as splunk_base
 COPY --chown=splunk:splunk ./bashrc ${SPLUNK_HOME}/.bashrc
 COPY --chown=splunk:splunk ./splunk.secret ${SPLUNK_HOME}/etc/auth/splunk.secret
 COPY --chown=splunk:splunk ./user-seed.conf ${SPLUNK_HOME}/etc/system/local/user-seed.conf
 COPY --chown=splunk:splunk ./server.conf ${SPLUNK_HOME}/etc/system/local/server.conf
 COPY --chown=splunk:splunk ./inputs.conf ${SPLUNK_HOME}/etc/system/local/inputs.conf
+
+FROM splunk_install as splunk_base
 
 # Required to accept the license before using splunk set commands
 RUN ${SPLUNK_HOME}/bin/splunk enable boot-start -user ${SPLUNK_USER} -systemd-managed 0 --accept-license --answer-yes --no-prompt \
