@@ -51,9 +51,7 @@ RUN wget -q -O ${SPLUNK_TGZ} ${SPLUNK_URL} \
 
 COPY --chown=splunk:splunk ./bashrc ${SPLUNK_HOME}/.bashrc
 COPY --chown=splunk:splunk ./splunk.secret ${SPLUNK_HOME}/etc/auth/splunk.secret
-COPY --chown=splunk:splunk ./user-seed.conf ${SPLUNK_HOME}/etc/system/local/user-seed.conf
-COPY --chown=splunk:splunk ./server.conf ${SPLUNK_HOME}/etc/system/local/server.conf
-COPY --chown=splunk:splunk ./inputs.conf ${SPLUNK_HOME}/etc/system/local/inputs.conf
+COPY --chown=splunk:splunk user-seed.conf server.conf inputs.conf ${SPLUNK_HOME}/etc/system/local/
 
 FROM splunk_install as splunk_base
 
