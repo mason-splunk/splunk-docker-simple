@@ -22,7 +22,7 @@ ENV SPLUNK_HOME=/opt/splunk \
     SPLUNK_URL='https://download.splunk.com/products/splunk/releases/8.2.1/linux/splunk-8.2.1-ddff1c41e5cf-Linux-x86_64.tgz'
 
 # Download and Install Splunk
-RUN wget -O ${SPLUNK_TGZ} ${SPLUNK_URL} \
+RUN wget -q -O ${SPLUNK_TGZ} ${SPLUNK_URL} \
   && tar xzvf ${SPLUNK_TGZ} -C /opt \
   && rm -f ${SPLUNK_TGZ} \
   && rm -rf ${SPLUNK_HOME}/splunk-8.2.1-ddff1c41e5cf-linux-2.6-x86_64-manifest \
@@ -57,10 +57,10 @@ COPY --chown=splunk:splunk ./server.conf ${SPLUNK_HOME}/etc/system/local/server.
 COPY --chown=splunk:splunk ./inputs.conf ${SPLUNK_HOME}/etc/system/local/inputs.conf
 
 # Required to accept the license before using splunk set commands
-RUN ${SPLUNK_HOME}/bin/splunk enable boot-start -user ${SPLUNK_USER} -systemd-managed 0 --accept-license --answer-yes --no-prompt
-RUN ${SPLUNK_HOME}/bin/splunk set servername splunk-docker-simple
-RUN ${SPLUNK_HOME}/bin/splunk set default-hostname splunk-docker-simple
-RUN ${SPLUNK_HOME}/bin/splunk set minfreemb 1024
+RUN ${SPLUNK_HOME}/bin/splunk enable boot-start -user ${SPLUNK_USER} -systemd-managed 0 --accept-license --answer-yes --no-prompt \
+  && ${SPLUNK_HOME}/bin/splunk set servername splunk-docker-simple \
+  && ${SPLUNK_HOME}/bin/splunk set default-hostname splunk-docker-simple \
+  && ${SPLUNK_HOME}/bin/splunk set minfreemb 1024
 
 USER ${SPLUNK_USER}
 WORKDIR ${SPLUNK_HOME}
@@ -76,4 +76,5 @@ EXPOSE 8191
 # HTTP Event Collector (HEC)
 EXPOSE 8088
 
-ENTRYPOINT ${SPLUNK_HOME}/bin/splunk start --nodaemon
+#CMD [ "${SPLUNK_HOME}/bin/splunk start", "--nodaemon" ]
+ENTRYPOINT [ "${SPLUNK_HOME}/bin/splunk start", "--nodaemon" ]
